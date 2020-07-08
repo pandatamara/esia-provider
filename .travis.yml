@@ -1,0 +1,22 @@
+dist: bionic
+language: php
+addons:
+  apt:
+    packages:
+    - libengine-gost-openssl1.1
+
+before_install:
+    - sudo bash tests/.configure-gost-openssl.sh
+
+php:
+  - 7.1
+  - 7.2
+
+install:
+  - travis_retry composer self-update
+  - travis_retry composer --version
+  - travis_retry composer install --prefer-dist --no-interaction
+
+script:
+  - chmod 000 tests/_data/non_readable_file
+  - php vendor/codeception/codeception/codecept run
